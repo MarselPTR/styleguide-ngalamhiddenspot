@@ -784,18 +784,18 @@
     <div class="info-box">💡 Warna semantik pendukung: <strong>#ef4444</strong> (Error/Hapus), <strong>#f59e0b</strong> (Warning/Pending), <strong>#3b82f6</strong> (Info/Link) — hanya digunakan untuk konteks status, bukan dekorasi.</div>
 
     <div class="code-block">
-<span class="c">/* CSS Custom Properties — Ngalam Hidden Spot */</span>
+<span class="c">/ CSS Custom Properties — Ngalam Hidden Spot /</span>
 <span class="k">:root</span> {
-  <span class="c">/* Core Brand Colors */</span>
-  <span class="k">--primary</span>:       <span class="v">#10b981</span>;  <span class="c">/* Emerald Green */</span>
-  <span class="k">--primary-dark</span>:  <span class="v">#0c8a60</span>;  <span class="c">/* Forest Green  */</span>
-  <span class="k">--primary-light</span>: <span class="v">#d1fae5</span>;  <span class="c">/* Mint Tint     */</span>
+  <span class="c">/ Core Brand Colors /</span>
+  <span class="k">--primary</span>:       <span class="v">#10b981</span>;  <span class="c">/ Emerald Green /</span>
+  <span class="k">--primary-dark</span>:  <span class="v">#0c8a60</span>;  <span class="c">/ Forest Green  /</span>
+  <span class="k">--primary-light</span>: <span class="v">#d1fae5</span>;  <span class="c">/ Mint Tint     /</span>
 
-  <span class="c">/* Content Hierarchy */</span>
-  <span class="k">--text-primary</span>:   <span class="v">#0b222c</span>;  <span class="c">/* Deep Teal  */</span>
-  <span class="k">--text-secondary</span>: <span class="v">#64748b</span>;  <span class="c">/* Slate      */</span>
+  <span class="c">/ Content Hierarchy /</span>
+  <span class="k">--text-primary</span>:   <span class="v">#0b222c</span>;  <span class="c">/ Deep Teal  /</span>
+  <span class="k">--text-secondary</span>: <span class="v">#64748b</span>;  <span class="c">/ Slate      /</span>
 
-  <span class="c">/* Surfaces & Layout */</span>
+  <span class="c">/ Surfaces & Layout /</span>
   <span class="k">--bg-base</span>: <span class="v">#f0f4f7</span>;
   <span class="k">--surface</span>: <span class="v">#ffffff</span>;
   <span class="k">--border</span>:  <span class="v">#e2e8f0</span>;
@@ -985,7 +985,7 @@
     <div class="warn-box" style="margin-top:1.5rem">⚠️ Seluruh tombol WAJIB menggunakan <code>transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1)</code>. Hindari <code>ease</code> atau <code>linear</code> yang terasa kaku dan generik.</div>
 
     <div class="code-block">
-<span class="c">/* Primary Button */</span>
+<span class="c">/ Primary Button /</span>
 <span class="k">.btn-primary</span> {
   background: <span class="v">linear-gradient(135deg, #0b222c, #1a3d4d)</span>;
   color: <span class="v">white</span>;
@@ -1078,21 +1078,21 @@
     </div>
 
     <div class="code-block">
-<span class="c">/* ✦ Focus State — The Emerald Glow */</span>
+<span class="c">/ Focus State — The Emerald Glow /</span>
 <span class="k">.form-input:focus</span> {
   border-color: <span class="v">#10b981</span>;
   box-shadow:   <span class="v">0 0 0 4px rgba(16, 185, 129, 0.15)</span>;
   transform:    <span class="v">translateY(-1px)</span>;
-  <span class="c">/* DILARANG: width/height/padding TIDAK BOLEH berubah */</span>
+  <span class="c">/ DILARANG: width/height/padding TIDAK BOLEH berubah /</span>
 }
 
-<span class="c">/* Error State */</span>
+<span class="c">/ Error State /</span>
 <span class="k">.form-input.is-error</span> {
   border-color: <span class="v">#ef4444</span>;
   box-shadow:   <span class="v">0 0 0 4px rgba(239, 68, 68, 0.1)</span>;
 }
 
-<span class="c">/* Range Slider Custom Thumb */</span>
+<span class="c">/ Range Slider Custom Thumb /</span>
 <span class="k">input[type=range]::-webkit-slider-thumb</span> {
   width:      <span class="v">20px</span>;
   height:     <span class="v">20px</span>;
@@ -1295,7 +1295,7 @@ setTimeout(() => controls.start(<span class="s">'exit'</span>), <span class="s">
     </div>
 
     <div class="code-block">
-<span class="c">/* ✦ Glassmorphism — Rule Wajib */</span>
+<span class="c">/ Glassmorphism — Rule Wajib /</span>
 <span class="k">.glass-panel</span> {
   background:              <span class="v">rgba(255, 255, 255, 0.4)</span>;
   backdrop-filter:         <span class="v">blur(24px) saturate(180%)</span>;
@@ -1305,7 +1305,7 @@ setTimeout(() => controls.start(<span class="s">'exit'</span>), <span class="s">
   box-shadow:              <span class="v">0 40px 100px -30px rgba(0,0,0,0.15),
                            inset 0 1px 0 rgba(255,255,255,0.9)</span>;
 }
-<span class="c">/* PENTING: Parent HARUS memiliki background bergradasi! */</span>
+<span class="c">/ PENTING: Parent HARUS memiliki background bergradasi! /</span>
 <span class="k">.page-bg</span> {
   background:
     <span class="v">radial-gradient(ellipse at top right, rgba(16,185,129,0.10), transparent 50%)</span>,
