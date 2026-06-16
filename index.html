@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ngalam Hidden Spot | Design System</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo.png">
+<link rel="apple-touch-icon" href="assets/logo.png">
+<meta name="theme-color" content="#10b981">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #10b981;
+    --primary-dark: #0c8a60;
+    --primary-light: #d1fae5;
+    --deep-teal: #111827;
+    --mid-teal: #233345;
+    --slate: #5f6b7a;
+    --bg-base: #f5f5f7;
+    --surface: rgba(255,255,255,0.82);
+    --border: rgba(17,24,39,0.08);
+    --font-h: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Inter, sans-serif;
+    --font-b: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, sans-serif;
+    --r-sm: 14px;
+    --r-md: 18px;
+    --r-lg: 28px;
+    --r-xl: 44px;
+    --sh1: 0 18px 48px -28px rgba(15,23,42,0.28);
+    --sh2: 0 24px 64px -30px rgba(15,23,42,0.32);
+    --sh3: 0 40px 100px -38px rgba(15,23,42,0.38), inset 0 1px 0 rgba(255,255,255,0.85);
+    --sidebar-width: 248px;
+  }
+  html { scroll-behavior: smooth; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-b);
+    background:
+      radial-gradient(circle at 12% 0%, rgba(16,185,129,0.08), transparent 28%),
+      radial-gradient(circle at 100% 8%, rgba(59,130,246,0.06), transparent 22%),
+      linear-gradient(180deg, #fbfbfc 0%, #f5f5f7 48%, #eef2f7 100%);
+    color: #1d1d1f;
+    line-height: 1.65;
+    display: flex;
+    min-height: 100vh;
+    font-size: 15px;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Background Engine ── */
+  .bg-engine {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse at top right, rgba(16,185,129,0.08) 0%, transparent 48%),
+      radial-gradient(ellipse at bottom left, rgba(12,138,96,0.06) 0%, transparent 52%),
+      radial-gradient(ellipse at center, rgba(255,255,255,0.7) 0%, transparent 60%);
+    z-index: -2; pointer-events: none;
+  }
+  .bg-noise {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23n)"/%3E%3C/svg%3E');
+    opacity: 0.018; mix-blend-mode: soft-light; pointer-events: none; z-index: -1;
+  }
+
+  /* ── Progress Bar ── */
+  .progress-bar-wrap { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 999; background: rgba(226,232,240,0.4); }
+  .progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary-dark), var(--primary)); width: 0%; transition: width 0.1s linear; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: var(--sidebar-width); min-width: var(--sidebar-width);
+    background: rgba(255,255,255,0.74);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-right: 1px solid rgba(17,24,39,0.06);
+    position: fixed; top: 0; left: 0; height: 100vh;
+    overflow-y: auto; padding: 1.5rem 1rem;
+    z-index: 100;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--font-h); font-weight: 700; font-size: 1rem;
+    color: var(--deep-teal); margin-bottom: 1.75rem;
+    padding-bottom: 1.5rem; border-bottom: 1px solid var(--border);
+  }
+  .brand-icon {
+    width: 32px; height: 32px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(16,185,129,0.12);
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    padding: 3px; flex-shrink: 0; overflow: hidden;
+  }
+  .brand-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .nav-section { margin-bottom: 1.5rem; }
+  .nav-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+    color: #94a3b8; margin-bottom: 6px; padding-left: 8px;
+  }
+  .nav-item {
+    display: block; padding: 10px 12px; border-radius: 12px;
+    color: var(--slate); font-weight: 500; cursor: pointer;
+    text-decoration: none; transition: all 0.25s ease; font-size: 13px;
+    margin-bottom: 2px; border: none; background: none; width: 100%; text-align: left;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.92); color: var(--deep-teal); box-shadow: 0 10px 24px -16px rgba(15,23,42,0.28); }
+  .nav-item.active { background: rgba(16,185,129,0.12); color: var(--primary-dark); box-shadow: inset 0 0 0 1px rgba(16,185,129,0.1); }
+  .nav-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+
+  /* ── Main Content ── */
+  .main { margin-left: var(--sidebar-width); flex: 1; padding: 3rem 4rem 4rem; max-width: 1180px; }
+  .section { margin-bottom: 6rem; scroll-margin-top: 2rem; }
+
+  /* ── Page Header ── */
+  .page-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+    gap: 2rem;
+    align-items: stretch;
+    margin-bottom: 4rem;
+  }
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: clamp(420px, 56vw, 560px);
+    padding: 0.5rem 0;
+  }
+  .page-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.85); color: var(--primary-dark);
+    border: 1px solid rgba(16,185,129,0.12);
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.3px;
+    padding: 7px 14px; border-radius: 999px; margin-bottom: 1.1rem;
+  }
+  .page-title {
+    font-family: var(--font-h); font-size: clamp(3.2rem, 6vw, 5.8rem); font-weight: 800;
+    color: var(--deep-teal); line-height: 0.98; letter-spacing: -0.06em; max-width: 9ch; margin-bottom: 1rem;
+  }
+  .page-title .accent { color: var(--primary-dark); }
+  .page-desc { font-size: 1.05rem; color: var(--slate); max-width: 640px; line-height: 1.8; }
+  .hero-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 1.75rem; }
+  .hero-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.75rem; }
+  .hero-panel {
+    position: relative;
+    min-height: clamp(420px, 56vw, 560px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-radius: var(--r-xl);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.82), rgba(255,255,255,0.56)),
+      radial-gradient(circle at top, rgba(16,185,129,0.14), transparent 42%),
+      radial-gradient(circle at bottom right, rgba(59,130,246,0.08), transparent 28%);
+  }
+  .hero-panel::before {
+    content: '';
+    position: absolute;
+    inset: 14px;
+    border-radius: calc(var(--r-xl) - 10px);
+    border: 1px solid rgba(255,255,255,0.62);
+    pointer-events: none;
+  }
+  .hero-panel::after {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -40px;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(16,185,129,0.18), transparent 68%);
+    filter: blur(6px);
+    pointer-events: none;
+  }
+  .hero-panel-top { position: relative; z-index: 1; }
+  .hero-panel-title { font-family: var(--font-h); font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 800; color: var(--deep-teal); line-height: 1.08; margin-top: 0.5rem; }
+  .hero-panel-copy { margin-top: 0.9rem; color: var(--slate); line-height: 1.75; max-width: 34ch; }
+  .hero-visual {
+    position: relative;
+    z-index: 1;
+    min-height: 190px;
+    border-radius: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin: 1.25rem 0;
+    background:
+      radial-gradient(circle at 50% 30%, rgba(16,185,129,0.24), transparent 34%),
+      linear-gradient(145deg, rgba(255,255,255,0.72), rgba(255,255,255,0.45));
+    border: 1px solid rgba(255,255,255,0.62);
+  }
+  .hero-visual::before {
+    content: '';
+    position: absolute;
+    inset: 14px;
+    border-radius: 22px;
+    border: 1px solid rgba(17,24,39,0.05);
+    pointer-events: none;
+  }
+  .hero-visual img {
+    width: min(42vw, 180px);
+    max-width: 180px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 22px 40px rgba(15,23,42,0.18));
+    transform: translateY(2px);
+  }
+  .hero-panel-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .hero-metric {
+    background: rgba(255,255,255,0.72);
+    border: 1px solid rgba(255,255,255,0.7);
+    border-radius: 22px;
+    padding: 0.95rem 1rem;
+    backdrop-filter: blur(16px);
+  }
+  .hero-metric-value { display: block; font-family: var(--font-h); font-size: 1.7rem; font-weight: 800; color: var(--deep-teal); line-height: 1; }
+  .hero-metric-label { display: block; margin-top: 4px; font-size: 11px; color: var(--slate); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* ── Section Headers ── */
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 1.5rem; padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(17,24,39,0.08);
+  }
+  .section-num {
+    font-family: var(--font-h); font-size: 11px; font-weight: 700;
+    color: var(--primary-dark); background: rgba(16,185,129,0.1);
+    padding: 4px 10px; border-radius: 999px; letter-spacing: 0.8px;
+  }
+  .section-title { font-family: var(--font-h); font-size: 1.2rem; font-weight: 700; color: var(--deep-teal); }
+  .section-desc { color: var(--slate); font-size: 0.95rem; max-width: 760px; margin-bottom: 1.5rem; line-height: 1.8; }
+
+  /* ── Showcase Container ── */
+  .showcase {
+    background: rgba(255,255,255,0.78);
+    backdrop-filter: blur(26px) saturate(150%);
+    -webkit-backdrop-filter: blur(26px) saturate(150%);
+    border: 1px solid rgba(255,255,255,0.84);
+    border-radius: 32px;
+    padding: 2rem;
+    box-shadow: 0 30px 80px -40px rgba(15,23,42,0.32);
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 1.5rem;
+  }
+  .showcase > * { position: relative; z-index: 1; }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1), transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+  /* ── Code Block ── */
+  .code-block {
+    background: #0f172a; color: #94a3b8;
+    border-radius: var(--r-lg); padding: 1.25rem 1.5rem;
+    font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.7;
+    overflow-x: auto; margin-top: 1rem; border: 1px solid #1e293b;
+  }
+  .code-block .k { color: #7dd3fc; }
+  .code-block .v { color: #86efac; }
+  .code-block .c { color: #475569; }
+  .code-block .s { color: #fca5a5; }
+
+  /* ── Info / Warning Boxes ── */
+  .info-box {
+    background: var(--primary-light); border-left: 3px solid var(--primary);
+    border-radius: 0 var(--r-sm) var(--r-sm) 0; padding: 12px 16px;
+    font-size: 13px; color: var(--primary-dark); margin-bottom: 1.5rem;
+  }
+  .warn-box {
+    background: #fff7ed; border-left: 3px solid #f59e0b;
+    border-radius: 0 var(--r-sm) var(--r-sm) 0; padding: 12px 16px;
+    font-size: 13px; color: #92400e; margin-bottom: 1.5rem;
+  }
+
+  /* ── Layout Helpers ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+  /* ── COLORS ── */
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    align-items: start;
+    align-content: start;
+  }
+  .color-card {
+    border-radius: var(--r-md);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: white;
+    transition: transform 0.3s ease;
+    align-self: stretch;
+    height: 190px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .color-card:hover { transform: translateY(-4px); box-shadow: var(--sh1); }
+  .color-swatch { height: 72px; width: 100%; }
+  .color-info {
+    padding: 10px 12px 12px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 0;
+  }
+  .color-name { font-weight: 600; color: var(--deep-teal); font-size: 13px; display: block; line-height: 1.35; min-height: 1.8em; }
+  .color-hex { font-family: 'Courier New', monospace; font-size: 11px; color: var(--slate); background: #f8fafc; padding: 3px 8px; border-radius: 6px; display: inline-block; margin-top: 4px; }
+  .color-usage {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.35;
+    min-height: 3.9em;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .type-showcase {
+    background: rgba(255,255,255,0.5); backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    border: 1px solid rgba(255,255,255,0.7); border-radius: var(--r-lg);
+    padding: 2rem; box-shadow: var(--sh3);
+  }
+  .type-row { padding: 1.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .type-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .type-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .type-tag { font-size: 10px; background: #f1f5f9; color: var(--slate); padding: 3px 8px; border-radius: 20px; font-family: 'Courier New', monospace; }
+
+  /* ── SHAPE & ELEVATION ── */
+  .radius-demos { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; }
+  .radius-box { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .radius-shape {
+    background: white; border: 2px solid var(--border);
+    width: 64px; height: 64px; display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: var(--slate); font-weight: 600; transition: all 0.3s ease;
+  }
+  .radius-shape:hover { border-color: var(--primary); color: var(--primary-dark); }
+  .radius-label { font-size: 11px; color: #94a3b8; font-family: 'Courier New', monospace; }
+  .elevation-demos { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+  .elevation-card { background: white; border-radius: var(--r-md); padding: 1.5rem 1rem; text-align: center; }
+  .elevation-label { font-size: 12px; font-weight: 700; color: var(--deep-teal); margin-bottom: 6px; display: block; }
+  .elevation-desc { font-size: 11px; color: var(--slate); }
+
+  /* ── SPACING ── */
+  .spacing-row { display: flex; align-items: center; gap: 1rem; padding: 8px 0; border-bottom: 1px solid #f1f5f9; }
+  .spacing-row:last-child { border-bottom: none; }
+  .spacing-bar { background: linear-gradient(135deg, var(--primary-light), rgba(16,185,129,0.2)); border-radius: 4px; height: 20px; }
+  .spacing-label { font-family: 'Courier New', monospace; font-size: 11px; color: var(--slate); min-width: 40px; }
+  .spacing-px { font-size: 11px; color: #94a3b8; min-width: 60px; }
+  .spacing-use { font-size: 11px; color: var(--slate); }
+  .grid-demo { border: 1px dashed #cbd5e1; border-radius: var(--r-md); padding: 1rem; display: grid; gap: 12px; }
+  .grid-cell { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 12px; font-size: 11px; color: var(--primary-dark); font-weight: 600; text-align: center; }
+
+  /* ── BUTTONS ── */
+  .btn-primary-demo {
+    background: linear-gradient(180deg, #111827, #1f2937);
+    color: white; font-family: var(--font-h); font-weight: 600; font-size: 15px;
+    padding: 14px 24px; border: none; border-radius: 999px; cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.23,1,0.32,1); display: inline-block;
+    box-shadow: 0 16px 30px -18px rgba(15,23,42,0.45);
+  }
+  .btn-primary-demo:hover { transform: translateY(-2px) scale(1.01); box-shadow: 0 20px 34px -20px rgba(15,23,42,0.52); }
+  .btn-secondary-demo {
+    background: rgba(255,255,255,0.72); color: var(--primary-dark);
+    font-family: var(--font-h); font-weight: 600; font-size: 15px;
+    padding: 13px 22px; border: 1px solid rgba(16,185,129,0.24); border-radius: 999px;
+    cursor: pointer; transition: all 0.4s cubic-bezier(0.23,1,0.32,1); display: inline-block;
+  }
+  .btn-secondary-demo:hover { background: rgba(16,185,129,0.08); transform: translateY(-1px); }
+  .btn-ghost-demo {
+    background: rgba(255,255,255,0.65); color: var(--slate);
+    font-family: var(--font-h); font-weight: 600; font-size: 15px;
+    padding: 13px 22px; border: 1px solid rgba(17,24,39,0.1); border-radius: 999px;
+    cursor: pointer; transition: all 0.3s ease; display: inline-block;
+  }
+  .btn-ghost-demo:hover { border-color: rgba(17,24,39,0.18); color: var(--deep-teal); transform: translateY(-1px); }
+  .btn-danger-demo {
+    background: linear-gradient(180deg, #dc2626, #ef4444); color: white;
+    font-family: var(--font-h); font-weight: 600; font-size: 15px;
+    padding: 14px 24px; border: none; border-radius: 999px; cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.23,1,0.32,1); display: inline-block;
+  }
+  .btn-danger-demo:hover { transform: translateY(-3px); box-shadow: 0 12px 24px -8px rgba(220,38,38,0.4); }
+  .fab-demo {
+    width: 56px; height: 56px; border-radius: 50px;
+    background: linear-gradient(180deg, var(--primary-dark), var(--primary));
+    color: white; border: none; font-size: 24px; cursor: pointer;
+    box-shadow: 0 16px 34px -18px rgba(12,138,96,0.42); transition: all 0.4s cubic-bezier(0.23,1,0.32,1);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .fab-demo:hover { transform: translateY(-4px) scale(1.08); box-shadow: var(--sh3); }
+  .btn-group { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+  .btn-spec-table { width: 100%; font-size: 12px; border-collapse: collapse; margin-top: 1rem; }
+  .btn-spec-table th { background: #f8fafc; padding: 8px 12px; text-align: left; color: var(--slate); font-size: 11px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+  .btn-spec-table td { padding: 8px 12px; border-bottom: 1px solid #f1f5f9; color: var(--slate); }
+  .btn-spec-table code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 11px; color: #475569; }
+
+  /* ── FORMS ── */
+  .form-demos { display: flex; flex-direction: column; gap: 1.25rem; }
+  .input-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--slate); display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .form-input {
+    width: 100%; padding: 13px 16px; background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(17,24,39,0.08); border-radius: 16px;
+    font-family: var(--font-b); font-size: 14px; color: var(--deep-teal);
+    transition: all 0.4s cubic-bezier(0.23,1,0.32,1); outline: none;
+  }
+  .form-input::placeholder { color: #94a3b8; }
+  .form-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(16,185,129,0.12);
+    transform: translateY(-1px);
+  }
+  .form-input.is-error { border-color: #ef4444; box-shadow: 0 0 0 4px rgba(239,68,68,0.1); }
+  .form-input.is-success { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(16,185,129,0.15); }
+  .input-hint { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+  .input-error-msg { font-size: 11px; color: #ef4444; margin-top: 4px; }
+  .input-success-msg { font-size: 11px; color: var(--primary-dark); margin-top: 4px; }
+  .range-slider {
+    -webkit-appearance: none; width: 100%; height: 6px;
+    background: rgba(12,138,96,0.2); border-radius: 4px; outline: none;
+  }
+  .range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%;
+    background: var(--primary); border: 3px solid white; cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: transform 0.3s ease;
+  }
+  .range-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+  .form-select {
+    width: 100%; padding: 13px 16px; background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(17,24,39,0.08); border-radius: 16px;
+    font-family: var(--font-b); font-size: 14px; color: var(--deep-teal);
+    transition: all 0.4s cubic-bezier(0.23,1,0.32,1); outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpolyline points='6,9 12,15 18,9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 16px center;
+  }
+  .form-select:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(16,185,129,0.15); transform: translateY(-1px); }
+  .form-textarea {
+    width: 100%; padding: 13px 16px; background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(17,24,39,0.08); border-radius: 16px;
+    font-family: var(--font-b); font-size: 14px; color: var(--deep-teal);
+    transition: all 0.4s cubic-bezier(0.23,1,0.32,1); outline: none; resize: vertical; min-height: 80px;
+  }
+  .form-textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(16,185,129,0.15); }
+  .form-textarea::placeholder { color: #94a3b8; }
+
+  /* ── CARDS ── */
+  .spot-card { background: rgba(255,255,255,0.92); border-radius: var(--r-lg); border: 1px solid rgba(17,24,39,0.08); overflow: hidden; transition: all 0.4s ease; width: 290px; text-align: left; }
+  .spot-card:hover { box-shadow: 0 24px 48px -30px rgba(15,23,42,0.28); transform: translateY(-4px); }
+  .card-img { height: 160px; width: 100%; object-fit: cover; display: block; background: #e2e8f0; }
+  .card-body { padding: 1.25rem; }
+  .card-title { font-family: var(--font-h); font-size: 1rem; font-weight: 700; color: var(--deep-teal); margin-bottom: 6px; }
+  .card-desc { font-size: 13px; color: var(--slate); line-height: 1.5; }
+  .card-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(12,62,84,0.06); font-size: 12px; font-weight: 500; color: var(--slate); }
+  .card-actions { padding: 0 1.25rem 1.25rem; display: flex; gap: 8px; }
+  .merchant-card { background: rgba(255,255,255,0.92); border-radius: var(--r-lg); border: 1px solid rgba(17,24,39,0.08); overflow: hidden; transition: all 0.4s ease; width: 270px; }
+  .merchant-header { background: linear-gradient(135deg, var(--deep-teal), var(--mid-teal)); padding: 1.25rem; color: white; }
+  .merchant-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; background: rgba(16,185,129,0.3); color: #6ee7b7; padding: 3px 8px; border-radius: 20px; display: inline-block; margin-bottom: 8px; }
+  .merchant-name { font-family: var(--font-h); font-size: 1rem; font-weight: 700; }
+  .merchant-sub { font-size: 12px; opacity: 0.7; margin-top: 2px; }
+  .merchant-body { padding: 1.25rem; }
+  .merchant-stat { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+  .merchant-stat:last-child { border-bottom: none; }
+  .merchant-stat-label { color: var(--slate); }
+  .merchant-stat-val { font-weight: 600; color: var(--deep-teal); }
+  .admin-card { background: rgba(255,255,255,0.92); border-radius: var(--r-lg); border: 1px solid rgba(17,24,39,0.08); overflow: hidden; width: 260px; }
+  .admin-card-body { padding: 1.25rem; }
+
+  /* ── BADGES ── */
+  .badge { padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+  .badge-green  { background: #e7f5ef; color: #16684b; }
+  .badge-blue   { background: #eff6ff; color: #1d4ed8; }
+  .badge-orange { background: #fff7ed; color: #c2410c; }
+  .badge-red    { background: #fef2f2; color: #b91c1c; }
+  .badge-purple { background: #f5f3ff; color: #7c3aed; }
+  .badge-gray   { background: #f1f5f9; color: #475569; }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1rem; }
+  .chip { background: #f1f5f9; color: var(--slate); padding: 5px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s ease; font-family: var(--font-b); }
+  .chip:hover, .chip.active { background: var(--primary-light); color: var(--primary-dark); border-color: var(--primary); }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  /* ── TOAST ── */
+  .toast-preview { background: rgba(255,255,255,0.9); border-radius: 18px; box-shadow: 0 20px 40px -26px rgba(15,23,42,0.32); display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; max-width: 360px; margin: 0 auto 0.75rem; border: 1px solid rgba(17,24,39,0.08); }
+  .toast-icon { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: white; }
+  .toast-content { flex: 1; }
+  .toast-title { font-weight: 600; font-size: 13px; color: var(--deep-teal); display: block; }
+  .toast-msg { font-size: 12px; color: var(--slate); margin-top: 2px; display: block; }
+  .toast-close { color: #94a3b8; font-size: 18px; cursor: pointer; margin-left: 8px; line-height: 1; padding: 0 2px; }
+
+  /* ── GLASSMORPHISM ── */
+  .glass-panel {
+    background: rgba(255,255,255,0.72);
+    backdrop-filter: blur(26px) saturate(160%);
+    -webkit-backdrop-filter: blur(26px) saturate(160%);
+    border: 1px solid rgba(255,255,255,0.72);
+    border-radius: var(--r-xl);
+    padding: 1.5rem;
+    box-shadow: var(--sh3);
+  }
+  .glass-auth {
+    background: rgba(255,255,255,0.72);
+    backdrop-filter: blur(26px) saturate(160%);
+    -webkit-backdrop-filter: blur(26px) saturate(160%);
+    border: 1px solid rgba(255,255,255,0.72);
+    border-radius: var(--r-xl);
+    padding: 1.5rem;
+    box-shadow: var(--sh3);
+  }
+  .glass-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--primary-dark); background: rgba(16,185,129,0.1); padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 8px; }
+  .glass-title { font-family: var(--font-h); font-size: 1.1rem; font-weight: 700; color: var(--deep-teal); margin-bottom: 6px; }
+  .glass-sub { font-size: 13px; color: var(--slate); }
+  .glass-bg { background: radial-gradient(ellipse at top right,rgba(16,185,129,0.15),transparent 50%),radial-gradient(ellipse at bottom left,rgba(12,138,96,0.1),transparent 50%),var(--bg-base); border-radius: var(--r-lg); padding: 2rem; }
+
+  /* ── MOTION ── */
+  .motion-row { display: flex; align-items: flex-start; gap: 1rem; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+  .motion-row:last-child { border-bottom: none; }
+  .motion-name { font-family: 'Courier New', monospace; font-size: 11px; color: var(--primary-dark); background: var(--primary-light); padding: 3px 8px; border-radius: 6px; min-width: 150px; flex-shrink: 0; }
+  .motion-col { flex: 1; }
+  .motion-desc { font-size: 12px; color: var(--slate); }
+  .motion-use { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+
+  /* ── ICONS ── */
+  .icon-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; width: 100%; }
+  .icon-tile { background: white; border: 1px solid var(--border); border-radius: var(--r-sm); padding: 16px 10px; text-align: center; transition: all 0.3s ease; cursor: pointer; min-height: 132px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .icon-tile:hover { border-color: var(--primary); box-shadow: var(--sh1); transform: translateY(-2px); }
+  .icon-glyph { display: flex; align-items: center; justify-content: center; margin-bottom: 8px; min-height: 32px; }
+  .icon-glyph svg, .icon-glyph img { width: 24px; height: 24px; display: block; object-fit: contain; }
+  .icon-glyph.logo svg, .icon-glyph.logo img { width: 34px; height: 34px; }
+  .icon-name { font-size: 10px; color: #94a3b8; line-height: 1.3; }
+
+  /* ── FOOTER ── */
+  .guide-footer { padding: 3rem 0 2rem; border-top: 1px solid var(--border); text-align: center; color: #94a3b8; font-size: 13px; }
+  .guide-footer strong { color: var(--primary-dark); }
+
+  /* ── STATS BAR ── */
+  .stats-bar { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; margin-top: 0.5rem; grid-column: 1 / -1; }
+  .stat-card { background: rgba(255,255,255,0.82); border: 1px solid rgba(17,24,39,0.08); border-radius: 22px; padding: 1rem; text-align: center; box-shadow: 0 18px 40px -30px rgba(15,23,42,0.24); }
+  .stat-val { font-family: var(--font-h); font-size: 1.8rem; font-weight: 800; color: var(--primary-dark); }
+  .stat-label { font-size: 11px; color: var(--slate); margin-top: 2px; }
+
+  /* ── LIVE TOAST CONTAINER ── */
+  #toastBox { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 2rem 1.5rem; }
+    .page-header { grid-template-columns: 1fr; }
+    .hero-copy, .hero-panel { min-height: auto; }
+    .two-col { grid-template-columns: 1fr; }
+    .elevation-demos { grid-template-columns: 1fr; }
+    .stats-bar { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 780px) {
+    .color-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .icon-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 520px) {
+    .color-grid { grid-template-columns: 1fr; }
+    .icon-grid { grid-template-columns: 1fr; }
+    .hero-actions { flex-direction: column; align-items: stretch; }
+    .hero-actions .btn-primary-demo,
+    .hero-actions .btn-secondary-demo,
+    .hero-actions .btn-ghost-demo { width: 100%; justify-content: center; text-align: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-engine"></div>
+<div class="bg-noise"></div>
+<div class="progress-bar-wrap"><div class="progress-bar" id="pgbar"></div></div>
+
+<!-- ══════════════════════════════════════════
+     SIDEBAR
+══════════════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon"><img src="assets/logo.png" alt="Ngalam Hidden Spot logo"></div>
+    Ngalam System
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Fondasi</div>
+    <button class="nav-item active" onclick="goTo('intro')"><span class="nav-dot" style="background:var(--primary)"></span>Pengenalan</button>
+    <button class="nav-item" onclick="goTo('colors')"><span class="nav-dot" style="background:#10b981"></span>Color Tokens</button>
+    <button class="nav-item" onclick="goTo('typography')"><span class="nav-dot" style="background:#0b222c"></span>Tipografi</button>
+    <button class="nav-item" onclick="goTo('shape')"><span class="nav-dot" style="background:#64748b"></span>Shape & Elevation</button>
+    <button class="nav-item" onclick="goTo('spacing')"><span class="nav-dot" style="background:#94a3b8"></span>Spacing & Grid</button>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Komponen</div>
+    <button class="nav-item" onclick="goTo('buttons')"><span class="nav-dot" style="background:#0b222c"></span>Buttons & FAB</button>
+    <button class="nav-item" onclick="goTo('forms')"><span class="nav-dot" style="background:#10b981"></span>Form Controls</button>
+    <button class="nav-item" onclick="goTo('cards')"><span class="nav-dot" style="background:#0c8a60"></span>Spot Cards</button>
+    <button class="nav-item" onclick="goTo('badges')"><span class="nav-dot" style="background:#16684b"></span>Badges & Status</button>
+    <button class="nav-item" onclick="goTo('toast')"><span class="nav-dot" style="background:#3b82f6"></span>Toast System</button>
+    <button class="nav-item" onclick="goTo('glass')"><span class="nav-dot" style="background:rgba(255,255,255,0.5);border:1px solid #cbd5e1"></span>Glassmorphism</button>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Interaction</div>
+    <button class="nav-item" onclick="goTo('motion')"><span class="nav-dot" style="background:#7c3aed"></span>Motion & Animasi</button>
+    <button class="nav-item" onclick="goTo('icons')"><span class="nav-dot" style="background:#f59e0b"></span>Ikon & Simbol</button>
+  </div>
+
+  <div class="nav-section" style="border-top:1px solid var(--border);padding-top:1rem;margin-top:0.5rem">
+    <div class="nav-label">Stack</div>
+    <div style="font-size:11px;color:#94a3b8;line-height:2;padding-left:8px">
+      React + Vite<br>Supabase (PostgreSQL)<br>Framer Motion<br>Vercel Deployment
+    </div>
+  </div>
+</aside>
+
+<!-- ══════════════════════════════════════════
+     MAIN CONTENT
+══════════════════════════════════════════ -->
+<main class="main" id="mainContent">
+
+  <!-- ── INTRO ── -->
+  <div id="intro" class="page-header section">
+    <div class="hero-copy reveal">
+      <div class="page-eyebrow">Ngalam Hidden Spot · Design System v1.0</div>
+      <h1 class="page-title">Ngalam <span class="accent">Hidden</span> Spot</h1>
+      <p class="page-desc">
+        Panduan visual untuk platform spot nugas dan kafe di Malang Raya, dirapikan dengan ritme yang lebih tenang, editorial, dan presisi. Tema hijau-teal tetap dipertahankan, tetapi disajikan dengan bahasa desain yang lebih premium.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary-demo" onclick="goTo('colors')">Lihat Tokens</button>
+        <button class="btn-secondary-demo" onclick="goTo('motion')">Lihat Motion</button>
+        <button class="btn-ghost-demo" onclick="goTo('icons')">Icon System</button>
+      </div>
+      <div class="hero-pills">
+        <span class="badge badge-green">Editorial Layout</span>
+        <span class="badge badge-blue">Soft Motion</span>
+        <span class="badge badge-purple">Same Brand Theme</span>
+        <span class="badge badge-orange">Style Guide First</span>
+      </div>
+    </div>
+
+    <div class="hero-panel glass-panel reveal">
+      <div class="hero-panel-top">
+        <span class="glass-label">System Snapshot</span>
+        <div class="hero-panel-title">Clean hierarchy. Calm motion. Clear intent.</div>
+        <div class="hero-panel-copy">Tampilan dibuat lebih lapang seperti halaman produk premium, tetapi tetap relevan untuk dokumentasi komponen dan token desain.</div>
+      </div>
+
+      <div class="hero-visual">
+        <img src="assets/logo.png" alt="Ngalam Hidden Spot logo">
+      </div>
+
+      <div class="hero-panel-grid">
+        <div class="hero-metric"><span class="hero-metric-value">12</span><span class="hero-metric-label">Sections</span></div>
+        <div class="hero-metric"><span class="hero-metric-value">8</span><span class="hero-metric-label">Component Groups</span></div>
+        <div class="hero-metric"><span class="hero-metric-value">4</span><span class="hero-metric-label">Live Icons</span></div>
+        <div class="hero-metric"><span class="hero-metric-value">1</span><span class="hero-metric-label">Source of Truth</span></div>
+      </div>
+    </div>
+
+    <div class="stats-bar reveal">
+      <div class="stat-card"><div class="stat-val">3</div><div class="stat-label">User Roles</div></div>
+      <div class="stat-card"><div class="stat-val">6</div><div class="stat-label">Color Tokens</div></div>
+      <div class="stat-card"><div class="stat-val">8</div><div class="stat-label">Komponen UI</div></div>
+      <div class="stat-card"><div class="stat-val">4</div><div class="stat-label">Live Icons</div></div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 01: COLORS ── -->
+  <section id="colors" class="section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-title">Color Tokens</span>
+    </div>
+    <p class="section-desc">Sistem warna berpusat pada keseimbangan antara <strong>Emerald Green</strong> sebagai aksi primer yang berenergi dan <strong>Deep Teal</strong> sebagai otoritas tenang. Setiap token harus dirujuk via CSS variable, bukan nilai hex langsung.</p>
+
+    <div class="showcase" style="flex-direction:column;align-items:stretch">
+      <div class="color-grid">
+        <div class="color-card">
+          <div class="color-swatch" style="background:#10b981"></div>
+          <div class="color-info">
+            <span class="color-name">Emerald Green</span>
+            <span class="color-hex">--primary: #10b981</span>
+            <span class="color-usage">Tombol utama, focus ring, ikon aktif, badge hijau</span>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background:#0c8a60"></div>
+          <div class="color-info">
+            <span class="color-name">Forest Green</span>
+            <span class="color-hex">--primary-dark: #0c8a60</span>
+            <span class="color-usage">Hover/active state, gradasi tombol, aksen teks</span>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background:#d1fae5"></div>
+          <div class="color-info">
+            <span class="color-name">Mint Tint</span>
+            <span class="color-hex">--primary-light: #d1fae5</span>
+            <span class="color-usage">Background badge, hover state ringan, focus area</span>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background:#0b222c"></div>
+          <div class="color-info">
+            <span class="color-name">Deep Teal</span>
+            <span class="color-hex">--text-primary: #0b222c</span>
+            <span class="color-usage">Semua judul (h1–h3), teks nama spot, heading nav</span>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background:#1a3d4d"></div>
+          <div class="color-info">
+            <span class="color-name">Mid Teal</span>
+            <span class="color-hex">#1a3d4d</span>
+            <span class="color-usage">Gradasi tombol primer, header merchant dashboard</span>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background:#64748b"></div>
+          <div class="color-info">
+            <span class="color-name">Slate</span>
+            <span class="color-hex">--text-secondary: #64748b</span>
+            <span class="color-usage">Teks paragraf, deskripsi spot, label form, metadata</span>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background:#f0f4f7"></div>
+          <div class="color-info">
+            <span class="color-name">Soft Blue-Gray</span>
+            <span class="color-hex">--bg-base: #f0f4f7</span>
+            <span class="color-usage">Background dasar halaman + radial gradient</span>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background:#ffffff;border-bottom:1px solid #e2e8f0"></div>
+          <div class="color-info">
+            <span class="color-name">Pure White</span>
+            <span class="color-hex">--surface: #ffffff</span>
+            <span class="color-usage">Card surface, form input, panel konten</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">💡 Warna semantik pendukung: <strong>#ef4444</strong> (Error/Hapus), <strong>#f59e0b</strong> (Warning/Pending), <strong>#3b82f6</strong> (Info/Link) — hanya digunakan untuk konteks status, bukan dekorasi.</div>
+
+    <div class="code-block">
+<span class="c">/* CSS Custom Properties — Ngalam Hidden Spot */</span>
+<span class="k">:root</span> {
+  <span class="c">/* Core Brand Colors */</span>
+  <span class="k">--primary</span>:       <span class="v">#10b981</span>;  <span class="c">/* Emerald Green */</span>
+  <span class="k">--primary-dark</span>:  <span class="v">#0c8a60</span>;  <span class="c">/* Forest Green  */</span>
+  <span class="k">--primary-light</span>: <span class="v">#d1fae5</span>;  <span class="c">/* Mint Tint     */</span>
+
+  <span class="c">/* Content Hierarchy */</span>
+  <span class="k">--text-primary</span>:   <span class="v">#0b222c</span>;  <span class="c">/* Deep Teal  */</span>
+  <span class="k">--text-secondary</span>: <span class="v">#64748b</span>;  <span class="c">/* Slate      */</span>
+
+  <span class="c">/* Surfaces & Layout */</span>
+  <span class="k">--bg-base</span>: <span class="v">#f0f4f7</span>;
+  <span class="k">--surface</span>: <span class="v">#ffffff</span>;
+  <span class="k">--border</span>:  <span class="v">#e2e8f0</span>;
+}</div>
+  </section>
+
+  <!-- ── SECTION 02: TYPOGRAPHY ── -->
+  <section id="typography" class="section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <span class="section-title">Sistem Tipografi</span>
+    </div>
+    <p class="section-desc">Dua typeface dipilih karena kontrasnya yang tepat: <strong>Outfit</strong> membawa karakter geometris-modern untuk judul, sementara <strong>Inter</strong> menjamin keterbacaan tinggi pada teks panjang seperti ulasan mahasiswa.</p>
+
+    <div class="type-showcase">
+      <div class="type-row">
+        <div style="font-family:var(--font-h);font-size:2.6rem;font-weight:800;color:var(--deep-teal);line-height:1.1">Temukan Spot Nugas Terbaik</div>
+        <div class="type-meta">
+          <span class="type-tag">Outfit 800</span>
+          <span class="type-tag">clamp(2rem, 5vw, 3.3rem)</span>
+          <span class="type-tag">line-height: 1.1</span>
+          <span class="type-tag">H1 Display</span>
+        </div>
+      </div>
+      <div class="type-row">
+        <div style="font-family:var(--font-h);font-size:1.8rem;font-weight:700;color:var(--deep-teal);line-height:1.2">Spot Pilihan Minggu Ini</div>
+        <div class="type-meta">
+          <span class="type-tag">Outfit 700</span>
+          <span class="type-tag">clamp(1.35rem, 3.5vw, 2rem)</span>
+          <span class="type-tag">line-height: 1.2</span>
+          <span class="type-tag">H2 Section</span>
+        </div>
+      </div>
+      <div class="type-row">
+        <div style="font-family:var(--font-h);font-size:1.1rem;font-weight:700;color:var(--deep-teal);">Kopi Tuya Suhat — Co-Working Space</div>
+        <div class="type-meta">
+          <span class="type-tag">Outfit 700</span>
+          <span class="type-tag">1.05rem – 1.2rem</span>
+          <span class="type-tag">H3 Card Title</span>
+        </div>
+      </div>
+      <div class="type-row">
+        <div style="font-family:var(--font-b);font-size:1rem;font-weight:400;color:var(--slate);line-height:1.7">Tempat tenang dengan pencahayaan optimal dan WiFi stabil 50 Mbps. Sangat direkomendasikan untuk mahasiswa yang butuh fokus nugas atau revisi skripsi tanpa gangguan. Tersedia banyak colokan listrik dan area smoking zone terpisah.</div>
+        <div class="type-meta">
+          <span class="type-tag">Inter 400</span>
+          <span class="type-tag">16px (1rem)</span>
+          <span class="type-tag">line-height: 1.7</span>
+          <span class="type-tag">Body / Review Text</span>
+        </div>
+      </div>
+      <div class="type-row">
+        <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
+          <span style="font-family:var(--font-h);font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--slate)">LABEL FORM</span>
+          <span class="badge badge-green" style="font-size:12px">Badge Kategori</span>
+          <span style="font-family:'Courier New',monospace;font-size:0.8rem;color:var(--slate)">#10b981</span>
+        </div>
+        <div class="type-meta">
+          <span class="type-tag">Inter 600–700</span>
+          <span class="type-tag">0.85rem (14px)</span>
+          <span class="type-tag">Label / Badge / Code</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 03: SHAPE & ELEVATION ── -->
+  <section id="shape" class="section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <span class="section-title">Shape & Elevation</span>
+    </div>
+    <p class="section-desc">Seluruh ekosistem UI menggunakan filosofi <em>"zero sharp corners"</em>. Tingkat kelengkungan mengkomunikasikan hierarki komponen — semakin besar radius, semakin penting/premium elemennya.</p>
+
+    <div class="showcase" style="flex-direction:column;align-items:flex-start;gap:2rem">
+      <div style="width:100%">
+        <h3 style="font-family:var(--font-h);font-size:0.95rem;color:var(--deep-teal);margin-bottom:1.25rem">Border Radius Scale</h3>
+        <div class="radius-demos">
+          <div class="radius-box"><div class="radius-shape" style="border-radius:8px">8px</div><span class="radius-label">--r-xs</span><span style="font-size:10px;color:#94a3b8">Nav item</span></div>
+          <div class="radius-box"><div class="radius-shape" style="border-radius:12px">12px</div><span class="radius-label">--r-sm</span><span style="font-size:10px;color:#94a3b8">Input, Badge</span></div>
+          <div class="radius-box"><div class="radius-shape" style="border-radius:16px">16px</div><span class="radius-label">--r-md</span><span style="font-size:10px;color:#94a3b8">Tombol, Chip</span></div>
+          <div class="radius-box"><div class="radius-shape" style="border-radius:24px">24px</div><span class="radius-label">--r-lg</span><span style="font-size:10px;color:#94a3b8">Spot Card</span></div>
+          <div class="radius-box"><div class="radius-shape" style="border-radius:32px">32px</div><span class="radius-label">--r-xl</span><span style="font-size:10px;color:#94a3b8">Hero Panel</span></div>
+          <div class="radius-box"><div class="radius-shape" style="border-radius:40px">40px</div><span class="radius-label">--r-2xl</span><span style="font-size:10px;color:#94a3b8">Auth Card</span></div>
+          <div class="radius-box"><div class="radius-shape" style="border-radius:999px;width:64px">∞</div><span class="radius-label">pill</span><span style="font-size:10px;color:#94a3b8">FAB, Toggle</span></div>
+        </div>
+      </div>
+      <div style="width:100%">
+        <h3 style="font-family:var(--font-h);font-size:0.95rem;color:var(--deep-teal);margin-bottom:1.25rem">Elevation Levels (Box Shadow)</h3>
+        <div class="elevation-demos">
+          <div class="elevation-card" style="box-shadow:0 10px 30px -10px rgba(0,0,0,0.06)">
+            <span class="elevation-label">Level 1</span>
+            <span class="elevation-desc">Hover state kartu. Tampil saat pointer masuk area elemen.</span>
+            <div class="code-block" style="font-size:10px;padding:8px;margin-top:10px">0 10px 30px -10px rgba(0,0,0,0.05)</div>
+          </div>
+          <div class="elevation-card" style="box-shadow:0 20px 40px rgba(0,0,0,0.1)">
+            <span class="elevation-label">Level 2</span>
+            <span class="elevation-desc">Dropdown, popup, FAB saat idle.</span>
+            <div class="code-block" style="font-size:10px;padding:8px;margin-top:10px">0 20px 40px rgba(0,0,0,0.1)</div>
+          </div>
+          <div class="elevation-card" style="box-shadow:0 40px 100px -30px rgba(0,0,0,0.15),inset 0 1px 0 rgba(255,255,255,0.9)">
+            <span class="elevation-label">Level 3 ✦ Premium</span>
+            <span class="elevation-desc">Glassmorphism panel — Auth Card, Hero Panel.</span>
+            <div class="code-block" style="font-size:10px;padding:8px;margin-top:10px">0 40px 100px -30px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.9)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 04: SPACING & GRID ── -->
+  <section id="spacing" class="section">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <span class="section-title">Spacing & Grid System</span>
+    </div>
+    <p class="section-desc">Sistem spasi berbasis kelipatan 4px dan 8px untuk konsistensi ritme visual di seluruh halaman.</p>
+
+    <div class="showcase" style="flex-direction:column;align-items:stretch">
+      <div class="spacing-row"><div class="spacing-bar" style="width:4px"></div><span class="spacing-label">4px</span><span class="spacing-px">0.25rem</span><span class="spacing-use">Gap ikon-teks, border internal</span></div>
+      <div class="spacing-row"><div class="spacing-bar" style="width:8px"></div><span class="spacing-label">8px</span><span class="spacing-px">0.5rem</span><span class="spacing-use">Padding badge, jarak nav item</span></div>
+      <div class="spacing-row"><div class="spacing-bar" style="width:12px"></div><span class="spacing-label">12px</span><span class="spacing-px">0.75rem</span><span class="spacing-use">Gap card specs, padding kecil</span></div>
+      <div class="spacing-row"><div class="spacing-bar" style="width:16px"></div><span class="spacing-label">16px</span><span class="spacing-px">1rem</span><span class="spacing-use">Padding form input, gap komponen</span></div>
+      <div class="spacing-row"><div class="spacing-bar" style="width:24px"></div><span class="spacing-label">24px</span><span class="spacing-px">1.5rem</span><span class="spacing-use">Padding card body, gap navigasi</span></div>
+      <div class="spacing-row"><div class="spacing-bar" style="width:32px"></div><span class="spacing-label">32px</span><span class="spacing-px">2rem</span><span class="spacing-use">Padding showcase, jarak antar section</span></div>
+      <div class="spacing-row"><div class="spacing-bar" style="width:48px"></div><span class="spacing-label">48px</span><span class="spacing-px">3rem</span><span class="spacing-use">Padding halaman, margin besar</span></div>
+      <div class="spacing-row"><div class="spacing-bar" style="width:80px"></div><span class="spacing-label">80px</span><span class="spacing-px">5rem</span><span class="spacing-use">Jarak antar section utama halaman</span></div>
+    </div>
+
+    <p class="section-desc" style="margin-top:1.5rem;margin-bottom:1rem">Contoh layout kolom halaman Explore:</p>
+    <div class="grid-demo" style="grid-template-columns:repeat(3,1fr)">
+      <div class="grid-cell">Spot Card</div>
+      <div class="grid-cell">Spot Card</div>
+      <div class="grid-cell">Spot Card</div>
+    </div>
+    <div class="grid-demo" style="grid-template-columns:1fr 2fr;margin-top:8px">
+      <div class="grid-cell">Filter Panel</div>
+      <div class="grid-cell">Results Grid</div>
+    </div>
+    <div class="grid-demo" style="grid-template-columns:1fr 1fr;margin-top:8px">
+      <div class="grid-cell">Input Field</div>
+      <div class="grid-cell">Input Field</div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 05: BUTTONS ── -->
+  <section id="buttons" class="section">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <span class="section-title">Buttons & Actions</span>
+    </div>
+    <p class="section-desc">Setiap tombol menggunakan kurva animasi <code>cubic-bezier(0.23, 1, 0.32, 1)</code> yang memberikan respons "spring" elegan — terasa seperti objek fisik dengan daya pantul alami.</p>
+
+    <div class="showcase">
+      <div class="btn-group">
+        <div>
+          <div style="font-size:10px;color:#94a3b8;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Primary</div>
+          <button class="btn-primary-demo">Cari Spot Nugas</button>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#94a3b8;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Secondary</div>
+          <button class="btn-secondary-demo">Lihat Peta</button>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#94a3b8;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Ghost</div>
+          <button class="btn-ghost-demo">Batal</button>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#94a3b8;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Danger</div>
+          <button class="btn-danger-demo">Hapus Spot</button>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#94a3b8;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">FAB</div>
+          <button class="fab-demo">+</button>
+        </div>
+      </div>
+    </div>
+
+    <table class="btn-spec-table">
+      <tr><th>Variant</th><th>Penggunaan</th><th>Key CSS</th></tr>
+      <tr><td><strong>Primary</strong></td><td>CTA utama — Submit, Cari, Simpan</td><td><code>gradient 135deg deep-teal → mid-teal</code></td></tr>
+      <tr><td><strong>Secondary</strong></td><td>Aksi penting kedua — Lihat Peta, Filter</td><td><code>border 2px primary, bg transparent</code></td></tr>
+      <tr><td><strong>Ghost</strong></td><td>Aksi tersier — Batal, Lewati</td><td><code>border 1.5px #e2e8f0, bg transparent</code></td></tr>
+      <tr><td><strong>Danger</strong></td><td>Aksi destruktif — Hapus, Tolak</td><td><code>gradient 135deg #dc2626 → #ef4444</code></td></tr>
+      <tr><td><strong>FAB</strong></td><td>Add Review / Add Spot (fixed kanan bawah)</td><td><code>gradient emerald, border-radius: 50px</code></td></tr>
+    </table>
+
+    <div class="warn-box" style="margin-top:1.5rem">⚠️ Seluruh tombol WAJIB menggunakan <code>transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1)</code>. Hindari <code>ease</code> atau <code>linear</code> yang terasa kaku dan generik.</div>
+
+    <div class="code-block">
+<span class="c">/* Primary Button */</span>
+<span class="k">.btn-primary</span> {
+  background: <span class="v">linear-gradient(135deg, #0b222c, #1a3d4d)</span>;
+  color: <span class="v">white</span>;
+  font-family: <span class="v">var(--font-h)</span>;
+  font-weight: <span class="v">600</span>;
+  padding: <span class="v">14px 28px</span>;
+  border: <span class="v">none</span>;
+  border-radius: <span class="v">var(--r-md)</span>;
+  transition: <span class="v">all 0.4s cubic-bezier(0.23, 1, 0.32, 1)</span>;
+}
+<span class="k">.btn-primary:hover</span> {
+  transform: <span class="v">translateY(-3px) scale(1.02)</span>;
+  box-shadow: <span class="v">0 12px 24px -8px rgba(11, 34, 44, 0.4)</span>;
+}
+
+<span class="c">/* FAB */</span>
+<span class="k">.fab</span> {
+  background: <span class="v">linear-gradient(135deg, #0c8a60, #10b981)</span>;
+  border-radius: <span class="v">50px</span>;
+  width: <span class="v">56px</span>;
+  height: <span class="v">56px</span>;
+  position: <span class="v">fixed</span>;
+  bottom: <span class="v">2rem</span>;
+  right: <span class="v">2rem</span>;
+}</div>
+  </section>
+
+  <!-- ── SECTION 06: FORMS ── -->
+  <section id="forms" class="section">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <span class="section-title">Form Controls</span>
+    </div>
+    <p class="section-desc">Input dirancang "breathable" dengan padding lega. Saat mendapat fokus, elemen tidak berubah ukuran — melainkan memancarkan <em>Emerald Glow</em> dan sedikit melayang ke atas.</p>
+
+    <div class="showcase" style="flex-direction:column;align-items:stretch">
+      <div class="two-col">
+        <div class="form-demos">
+          <div>
+            <label class="input-label">Nama Kafe / Spot</label>
+            <input class="form-input" type="text" placeholder="Cth: Kopi Tuya Suhat...">
+            <div class="input-hint">Klik untuk melihat Emerald Glow focus state</div>
+          </div>
+          <div>
+            <label class="input-label">Tipe Tempat</label>
+            <select class="form-select">
+              <option>Co-Working Space</option>
+              <option>Kafe dengan WiFi</option>
+              <option>Perpustakaan Publik</option>
+              <option>Ruang Belajar</option>
+            </select>
+          </div>
+          <div>
+            <label class="input-label">Input Error State</label>
+            <input class="form-input is-error" value="nama@invalid" type="email">
+            <div class="input-error-msg">⚠ Format email tidak valid</div>
+          </div>
+          <div>
+            <label class="input-label">Input Success State</label>
+            <input class="form-input is-success" value="KTM verified ✓" type="text">
+            <div class="input-success-msg">✓ KTM berhasil diverifikasi</div>
+          </div>
+        </div>
+        <div class="form-demos">
+          <div>
+            <label class="input-label">Ulasan / Deskripsi</label>
+            <textarea class="form-textarea" placeholder="Ceritakan pengalaman nugas kamu di sini..."></textarea>
+          </div>
+          <div>
+            <label class="input-label">
+              <span>Filter Budget Maksimal</span>
+              <span id="budgetDisp" style="color:var(--primary)">Rp 35.000</span>
+            </label>
+            <input type="range" min="10000" max="100000" value="35000" class="range-slider" id="bRange">
+          </div>
+          <div>
+            <label class="input-label">
+              <span>Kecepatan WiFi Minimum</span>
+              <span id="wifiDisp" style="color:var(--primary)">50 Mbps</span>
+            </label>
+            <input type="range" min="1" max="100" value="50" class="range-slider" id="wRange">
+          </div>
+          <div>
+            <label class="input-label">Nomor HP / WhatsApp</label>
+            <input class="form-input" type="tel" placeholder="+62 812 ...">
+            <div class="input-hint">Digunakan untuk verifikasi merchant</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-block">
+<span class="c">/* ✦ Focus State — The Emerald Glow */</span>
+<span class="k">.form-input:focus</span> {
+  border-color: <span class="v">#10b981</span>;
+  box-shadow:   <span class="v">0 0 0 4px rgba(16, 185, 129, 0.15)</span>;
+  transform:    <span class="v">translateY(-1px)</span>;
+  <span class="c">/* DILARANG: width/height/padding TIDAK BOLEH berubah */</span>
+}
+
+<span class="c">/* Error State */</span>
+<span class="k">.form-input.is-error</span> {
+  border-color: <span class="v">#ef4444</span>;
+  box-shadow:   <span class="v">0 0 0 4px rgba(239, 68, 68, 0.1)</span>;
+}
+
+<span class="c">/* Range Slider Custom Thumb */</span>
+<span class="k">input[type=range]::-webkit-slider-thumb</span> {
+  width:      <span class="v">20px</span>;
+  height:     <span class="v">20px</span>;
+  background: <span class="v">var(--primary)</span>;
+  border:     <span class="v">3px solid white</span>;
+  box-shadow: <span class="v">0 2px 6px rgba(0,0,0,0.15)</span>;
+}</div>
+  </section>
+
+  <!-- ── SECTION 07: CARDS ── -->
+  <section id="cards" class="section">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <span class="section-title">Spot Card Pattern</span>
+    </div>
+    <p class="section-desc">Unit informasi inti direktori. Hierarki mengalir dari atas ke bawah: gambar → badge kategori → nama spot → deskripsi → grid metrik → tombol aksi.</p>
+
+    <div class="showcase" style="align-items:flex-start;flex-wrap:wrap;gap:1.5rem">
+
+      <!-- Standard Spot Card -->
+      <div>
+        <div style="font-size:10px;color:#94a3b8;text-transform:uppercase;margin-bottom:8px;letter-spacing:1px">Standard Spot Card</div>
+        <div class="spot-card">
+          <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=600&q=80" class="card-img" alt="Foto kafe">
+          <div class="card-body">
+            <span class="badge badge-green" style="margin-bottom:10px">Co-Working Space</span>
+            <div class="card-title">Kopi Tuya Suhat</div>
+            <div class="card-desc">Pencahayaan optimal, WiFi stabil, banyak colokan. Favorit mahasiswa UB dan UM.</div>
+            <div class="card-specs">
+              <div>⚡ WiFi: 50 Mbps</div>
+              <div>🔌 Colokan: Banyak</div>
+              <div>💵 Mulai: 15k</div>
+              <div>⭐ 4.8/5 (128)</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn-primary-demo" style="font-size:13px;padding:9px 18px;flex:1">Lihat Detail</button>
+            <button class="btn-ghost-demo" style="font-size:13px;padding:9px 14px">🗺️</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Merchant Card -->
+      <div>
+        <div style="font-size:10px;color:#94a3b8;text-transform:uppercase;margin-bottom:8px;letter-spacing:1px">Merchant Dashboard</div>
+        <div class="merchant-card">
+          <div class="merchant-header">
+            <span class="merchant-tag">✓ Terverifikasi</span>
+            <div class="merchant-name">Kedai Nongkrong Soekarno-Hatta</div>
+            <div class="merchant-sub">Jl. Soekarno-Hatta No. 12, Malang</div>
+          </div>
+          <div class="merchant-body">
+            <div class="merchant-stat"><span class="merchant-stat-label">Total Ulasan</span><span class="merchant-stat-val">247 ulasan</span></div>
+            <div class="merchant-stat"><span class="merchant-stat-label">Rating Rata-rata</span><span class="merchant-stat-val">⭐ 4.7 / 5</span></div>
+            <div class="merchant-stat"><span class="merchant-stat-label">Status</span><span class="merchant-stat-val" style="color:var(--primary)">Aktif</span></div>
+            <div class="merchant-stat"><span class="merchant-stat-label">WiFi</span><span class="merchant-stat-val">30 Mbps</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Verification Card -->
+      <div>
+        <div style="font-size:10px;color:#94a3b8;text-transform:uppercase;margin-bottom:8px;letter-spacing:1px">Admin Verification</div>
+        <div class="admin-card">
+          <div class="admin-card-body">
+            <span class="badge badge-orange" style="margin-bottom:10px">⏳ Menunggu Review</span>
+            <div class="card-title" style="font-size:0.9rem">Permohonan KTM Mahasiswa</div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:1rem">
+              <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--slate)">Nama</span><span style="color:var(--deep-teal);font-weight:600">Budi Santoso</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--slate)">Universitas</span><span style="color:var(--deep-teal);font-weight:600">Univ. Brawijaya</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--slate)">NIM</span><span style="color:var(--deep-teal);font-weight:600">215150407111024</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--slate)">Submitted</span><span style="color:var(--deep-teal);font-weight:600">2 menit lalu</span></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:1.25rem">
+              <button style="flex:1;background:var(--primary);color:white;border:none;padding:9px;border-radius:10px;font-family:var(--font-h);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.3s ease">✓ Setujui</button>
+              <button style="flex:1;background:white;color:#ef4444;border:1.5px solid #fecaca;padding:9px;border-radius:10px;font-family:var(--font-h);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.3s ease">✕ Tolak</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 08: BADGES & STATUS ── -->
+  <section id="badges" class="section">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <span class="section-title">Badges & Status Indicators</span>
+    </div>
+    <p class="section-desc">Lencana mengkomunikasikan kategori dan status secara sekilas. Selalu gunakan warna latar terang dengan teks dari ramp warna yang sama — tidak pernah teks hitam murni di atas fill berwarna.</p>
+
+    <div class="showcase" style="flex-direction:column;align-items:flex-start;gap:1.5rem">
+      <div style="width:100%">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:#94a3b8;letter-spacing:1px;margin-bottom:12px">Status Badges</div>
+        <div class="badge-row">
+          <span class="badge badge-green"><span class="status-dot" style="background:var(--primary)"></span>Aktif / Verified</span>
+          <span class="badge badge-orange"><span class="status-dot" style="background:#f59e0b"></span>Pending Review</span>
+          <span class="badge badge-red"><span class="status-dot" style="background:#ef4444"></span>Ditolak</span>
+          <span class="badge badge-blue"><span class="status-dot" style="background:#3b82f6"></span>Informasi Baru</span>
+          <span class="badge badge-gray"><span class="status-dot" style="background:#94a3b8"></span>Tidak Aktif</span>
+        </div>
+      </div>
+      <div style="width:100%">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:#94a3b8;letter-spacing:1px;margin-bottom:12px">Kategori Spot</div>
+        <div class="badge-row">
+          <span class="badge badge-green">🏠 Co-Working Space</span>
+          <span class="badge badge-blue">☕ Kafe Nugas</span>
+          <span class="badge badge-purple">📚 Perpustakaan</span>
+          <span class="badge badge-orange">🌿 Outdoor Study</span>
+          <span class="badge badge-gray">🏫 Ruang Kelas</span>
+        </div>
+      </div>
+      <div style="width:100%">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:#94a3b8;letter-spacing:1px;margin-bottom:12px">Filter Chips (klik untuk toggle)</div>
+        <div class="chip-row">
+          <span class="chip active" onclick="this.classList.toggle('active')">WiFi Cepat (50+ Mbps)</span>
+          <span class="chip" onclick="this.classList.toggle('active')">Budget ≤ 20k</span>
+          <span class="chip" onclick="this.classList.toggle('active')">Colokan Banyak</span>
+          <span class="chip" onclick="this.classList.toggle('active')">AC / Sejuk</span>
+          <span class="chip" onclick="this.classList.toggle('active')">Buka 24 Jam</span>
+          <span class="chip" onclick="this.classList.toggle('active')">Smoking Zone</span>
+          <span class="chip" onclick="this.classList.toggle('active')">Parkir Motor</span>
+          <span class="chip" onclick="this.classList.toggle('active')">Printer Tersedia</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 09: TOAST ── -->
+  <section id="toast" class="section">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <span class="section-title">Toast Notification System</span>
+    </div>
+    <p class="section-desc">Sistem umpan balik asinkron yang menggantikan <code>alert()</code> kaku. Toast muncul dari pojok kanan bawah dengan animasi spring Framer Motion dan otomatis hilang setelah 3.5 detik.</p>
+
+    <div class="showcase" style="flex-direction:column;gap:0">
+      <div class="toast-preview" style="border-left:4px solid var(--primary)">
+        <div class="toast-icon" style="background:var(--primary)">✓</div>
+        <div class="toast-content"><span class="toast-title">KTM berhasil diverifikasi!</span><span class="toast-msg">Kamu kini bisa menambahkan dan mereview spot baru.</span></div>
+        <span class="toast-close">×</span>
+      </div>
+      <div class="toast-preview" style="border-left:4px solid #ef4444">
+        <div class="toast-icon" style="background:#ef4444">!</div>
+        <div class="toast-content"><span class="toast-title">Gagal mengunggah foto</span><span class="toast-msg">Ukuran file maksimal 5MB. Coba kompres gambar terlebih dahulu.</span></div>
+        <span class="toast-close">×</span>
+      </div>
+      <div class="toast-preview" style="border-left:4px solid #f59e0b">
+        <div class="toast-icon" style="background:#f59e0b">⚠</div>
+        <div class="toast-content"><span class="toast-title">Spot sedang dalam review</span><span class="toast-msg">Admin akan memverifikasi spot dalam 1×24 jam ke depan.</span></div>
+        <span class="toast-close">×</span>
+      </div>
+      <div class="toast-preview" style="border-left:4px solid #3b82f6">
+        <div class="toast-icon" style="background:#3b82f6">i</div>
+        <div class="toast-content"><span class="toast-title">Spot baru di dekatmu!</span><span class="toast-msg">Kedai Koding, 250m dari lokasimu. Rating awal 4.5.</span></div>
+        <span class="toast-close">×</span>
+      </div>
+      <button class="btn-primary-demo" style="margin-top:1rem;width:fit-content" onclick="showLiveToast()">▶ Tampilkan Toast Live</button>
+    </div>
+
+    <div class="code-block">
+<span class="c">/* Framer Motion — Toast Spring Animation */</span>
+<span class="k">const</span> toastVariants = {
+  initial:  { y: <span class="s">50</span>,  opacity: <span class="s">0</span>, scale: <span class="s">0.9</span> },
+  animate:  { y: <span class="s">0</span>,   opacity: <span class="s">1</span>, scale: <span class="s">1</span>,
+    transition: { type: <span class="s">'spring'</span>, stiffness: <span class="s">400</span>, damping: <span class="s">30</span> }
+  },
+  exit:     { y: <span class="s">20</span>,  opacity: <span class="s">0</span>,
+    transition: { duration: <span class="s">0.2</span> }
+  }
+};
+
+<span class="c">/* Auto-dismiss after 3.5s */</span>
+setTimeout(() => controls.start(<span class="s">'exit'</span>), <span class="s">3500</span>);</div>
+  </section>
+
+  <!-- ── SECTION 10: GLASSMORPHISM ── -->
+  <section id="glass" class="section">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <span class="section-title">Glassmorphism Surfaces</span>
+    </div>
+    <p class="section-desc">Efek kaca berlapis adalah signature visual Ngalam Hidden Spot. Hanya efektif di atas background bergradasi — tanpa background warna-warni di belakangnya, efek ini tidak terlihat.</p>
+
+    <div class="glass-bg">
+      <div class="two-col">
+        <div class="glass-panel">
+          <div class="glass-label">Panel Standard</div>
+          <div class="glass-title">Showcase & Content Panel</div>
+          <div class="glass-sub">Digunakan sebagai container komponen dalam style guide dan halaman konten.</div>
+          <div style="font-size:10px;font-family:'Courier New',monospace;color:#94a3b8;margin-top:1rem;line-height:1.8">border-radius: 24px<br>blur(24px) saturate(180%)</div>
+        </div>
+        <div class="glass-auth">
+          <div class="glass-label">Auth Panel (XL Radius)</div>
+          <div class="glass-title">Login / Daftar Akun</div>
+          <div class="glass-sub">Panel login dan registrasi mahasiswa. Border-radius 40px untuk tampilan super-membulat yang premium.</div>
+          <div style="font-size:10px;font-family:'Courier New',monospace;color:#94a3b8;margin-top:1rem;line-height:1.8">border-radius: 40px<br>inset shadow aktif</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-block">
+<span class="c">/* ✦ Glassmorphism — Rule Wajib */</span>
+<span class="k">.glass-panel</span> {
+  background:              <span class="v">rgba(255, 255, 255, 0.4)</span>;
+  backdrop-filter:         <span class="v">blur(24px) saturate(180%)</span>;
+  -webkit-backdrop-filter: <span class="v">blur(24px) saturate(180%)</span>;
+  border:                  <span class="v">1px solid rgba(255, 255, 255, 0.6)</span>;
+  border-radius:           <span class="v">var(--r-lg)</span>;
+  box-shadow:              <span class="v">0 40px 100px -30px rgba(0,0,0,0.15),
+                           inset 0 1px 0 rgba(255,255,255,0.9)</span>;
+}
+<span class="c">/* PENTING: Parent HARUS memiliki background bergradasi! */</span>
+<span class="k">.page-bg</span> {
+  background:
+    <span class="v">radial-gradient(ellipse at top right, rgba(16,185,129,0.10), transparent 50%)</span>,
+    <span class="v">radial-gradient(ellipse at bottom left, rgba(12,138,96,0.08), transparent 50%)</span>;
+}</div>
+  </section>
+
+  <!-- ── SECTION 11: MOTION ── -->
+  <section id="motion" class="section">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <span class="section-title">Motion & Animasi Tokens</span>
+    </div>
+    <p class="section-desc">Animasi mengkomunikasikan hierarki dan respons. Semua token durasi dan easing distandarisasi agar seluruh UI terasa kohesif dan berkarakter sama.</p>
+
+    <div class="showcase" style="flex-direction:column;align-items:stretch">
+      <div class="motion-row">
+        <span class="motion-name">--ease-spring</span>
+        <div class="motion-col"><div class="motion-desc">cubic-bezier(0.23, 1, 0.32, 1)</div><div class="motion-use">Tombol, kartu, FAB — semua aksi langsung pengguna. Terasa "berat dan memantul".</div></div>
+      </div>
+      <div class="motion-row">
+        <span class="motion-name">--ease-smooth</span>
+        <div class="motion-col"><div class="motion-desc">cubic-bezier(0.4, 0, 0.2, 1)</div><div class="motion-use">Transisi halaman, sidebar, modal — perpindahan tenang dan profesional.</div></div>
+      </div>
+      <div class="motion-row">
+        <span class="motion-name">--ease-bounce</span>
+        <div class="motion-col"><div class="motion-desc">type: "spring", stiffness: 400, damping: 30</div><div class="motion-use">Toast notification, dialog konfirmasi — playful namun tetap responsif.</div></div>
+      </div>
+      <div class="motion-row">
+        <span class="motion-name">--dur-fast</span>
+        <div class="motion-col"><div class="motion-desc">0.2s (200ms)</div><div class="motion-use">Feedback langsung: hover badge, perubahan warna border, opacity toggle.</div></div>
+      </div>
+      <div class="motion-row">
+        <span class="motion-name">--dur-normal</span>
+        <div class="motion-col"><div class="motion-desc">0.4s (400ms)</div><div class="motion-use">Animasi tombol, slide dropdown, focus state input form.</div></div>
+      </div>
+      <div class="motion-row">
+        <span class="motion-name">--dur-slow</span>
+        <div class="motion-col"><div class="motion-desc">0.6s (600ms)</div><div class="motion-use">Transisi halaman penuh, skeleton loading, entrance kartu pertama.</div></div>
+      </div>
+    </div>
+
+    <div class="info-box" style="margin-top:1.5rem">✦ Selalu hormati <code>@media (prefers-reduced-motion: reduce)</code> — nonaktifkan semua animasi dekoratif untuk aksesibilitas pengguna dengan sensitivitas gerak.</div>
+  </section>
+
+  <!-- ── SECTION 12: ICONS ── -->
+  <section id="icons" class="section">
+    <div class="section-header">
+      <span class="section-num">12</span>
+      <span class="section-title">Ikon & Simbol Sistem</span>
+    </div>
+    <p class="section-desc">Sistem ikon di live website ini sangat minimal: logo brand, ikon user/email, ikon password, dan ikon submit. Hanya empat simbol ini yang dipakai agar sistem ikon tetap konsisten dengan produk.</p>
+
+    <div class="showcase">
+      <div class="icon-grid">
+        <div class="icon-tile">
+          <span class="icon-glyph logo"><img src="assets/logo.png" alt="Logo brand"></span>
+          <span class="icon-name">Logo Brand</span>
+        </div>
+        <div class="icon-tile">
+          <span class="icon-glyph">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-dark);">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </span>
+          <span class="icon-name">User / Email</span>
+        </div>
+        <div class="icon-tile">
+          <span class="icon-glyph">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-dark);">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </span>
+          <span class="icon-name">Password / Lock</span>
+        </div>
+        <div class="icon-tile">
+          <span class="icon-glyph">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-dark);">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </span>
+          <span class="icon-name">Submit Arrow</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <div class="guide-footer">
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;font-family:var(--font-h);font-size:1.5rem;font-weight:800;color:var(--deep-teal);margin-bottom:8px">
+      <span class="brand-icon" style="width:28px;height:28px"><img src="assets/logo.png" alt="Ngalam Hidden Spot logo"></span>
+      Ngalam Hidden Spot
+    </div>
+    <div>Design System v2.0 — Dikembangkan untuk <strong>Mahasiswa Malang Raya</strong></div>
+    <div style="margin-top:6px">React + Vite · Supabase · Framer Motion · Vercel</div>
+    <div style="margin-top:4px">by <strong>MarselPTR</strong></div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:1.5rem;flex-wrap:wrap">
+      <a href="https://ngalamhiddenspot.vercel.app/" style="color:var(--primary);text-decoration:none;font-size:13px;font-weight:600">→ Live App</a>
+      <span style="color:var(--border)">|</span>
+      <a href="https://github.com/MarselPTR/NgalamHiddenSpot" style="color:var(--primary);text-decoration:none;font-size:13px;font-weight:600">→ GitHub Repo</a>
+    </div>
+  </div>
+
+</main>
+
+<!-- Live Toast Box -->
+<div id="toastBox"></div>
+
+<script>
+  const revealTargets = document.querySelectorAll('.hero-copy, .hero-panel, .stats-bar, #mainContent .section, #mainContent .showcase, #mainContent .type-showcase, #mainContent .glass-bg');
+  revealTargets.forEach(el => el.classList.add('reveal'));
+  const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('is-visible');
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  revealTargets.forEach(el => revealObserver.observe(el));
+
+  // ── Progress bar ──
+  const pgbar = document.getElementById('pgbar');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    pgbar.style.width = pct + '%';
+    updateActiveNav();
+  });
+
+  // ── Active nav on scroll ──
+  function updateActiveNav() {
+    const ids = ['intro','colors','typography','shape','spacing','buttons','forms','cards','badges','toast','glass','motion','icons'];
+    let current = '';
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top < 120) current = id;
+    });
+    document.querySelectorAll('.nav-item').forEach(btn => {
+      const fn = btn.getAttribute('onclick') || '';
+      btn.classList.toggle('active', fn.includes("'" + current + "'"));
+    });
+  }
+
+  // ── Smooth scroll ──
+  function goTo(id) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ── Budget slider ──
+  const bRange = document.getElementById('bRange');
+  const bDisp  = document.getElementById('budgetDisp');
+  if (bRange) bRange.oninput = function() {
+    bDisp.textContent = 'Rp ' + parseInt(this.value).toLocaleString('id-ID');
+  };
+
+  // ── WiFi slider ──
+  const wRange = document.getElementById('wRange');
+  const wDisp  = document.getElementById('wifiDisp');
+  if (wRange) wRange.oninput = function() {
+    wDisp.textContent = this.value + ' Mbps';
+  };
+
+  // ── Live Toast ──
+  const toastMsgs = [
+    { icon: '✓', color: '#10b981', title: 'KTM Diverifikasi!', msg: 'Kamu kini bisa menambah spot baru.' },
+    { icon: '📍', color: '#3b82f6', title: 'Spot baru di dekatmu!', msg: 'Kedai Koding baru buka, 250m dari lokasimu.' },
+    { icon: '⭐', color: '#f59e0b', title: 'Review kamu disukai!', msg: '12 mahasiswa menyukai ulasanmu tentang Kopi Tuya.' },
+  ];
+  let toastIdx = 0;
+
+  function showLiveToast() {
+    const box = document.getElementById('toastBox');
+    const m   = toastMsgs[toastIdx % toastMsgs.length];
+    toastIdx++;
+
+    const t = document.createElement('div');
+    t.style.cssText = [
+      'background:white',
+      'border-left:4px solid ' + m.color,
+      'border-radius:12px',
+      'box-shadow:0 10px 30px rgba(0,0,0,0.12)',
+      'display:flex',
+      'align-items:flex-start',
+      'gap:12px',
+      'padding:14px 18px',
+      'min-width:290px',
+      'opacity:0',
+      'transform:translateY(30px) scale(0.95)',
+      'transition:all 0.4s cubic-bezier(0.23,1,0.32,1)',
+      'pointer-events:all'
+    ].join(';');
+
+    t.innerHTML =
+      '<div style="width:22px;height:22px;border-radius:50%;background:' + m.color + ';display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0">' + m.icon + '</div>' +
+      '<div style="flex:1"><div style="font-weight:600;font-size:13px;color:#0b222c">' + m.title + '</div><div style="font-size:12px;color:#64748b;margin-top:2px">' + m.msg + '</div></div>' +
+      '<span onclick="this.parentElement.remove()" style="cursor:pointer;color:#94a3b8;font-size:18px;line-height:1;padding:0 2px">×</span>';
+
+    box.appendChild(t);
+    setTimeout(() => { t.style.opacity = '1'; t.style.transform = 'translateY(0) scale(1)'; }, 10);
+    setTimeout(() => {
+      t.style.opacity = '0'; t.style.transform = 'translateY(10px) scale(0.95)';
+      setTimeout(() => t.remove(), 400);
+    }, 4000);
+  }
+</script>
+</body>
+</html>
